@@ -1,45 +1,98 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meu Site</title>
+  <meta charset="UTF-8">
+  <title>Controle de Faturamento Diário</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f0f0f0;
-      color: #333;
-      text-align: center;
+      background: #f3f3f3;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-    header {
-      background: #6200ea;
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, select, button {
+      padding: 10px;
+      width: 100%;
+      font-size: 1em;
+      margin-top: 5px;
+    }
+    button {
+      background-color: #4CAF50;
       color: white;
-      padding: 2rem 1rem;
+      border: none;
+      margin-top: 20px;
+      cursor: pointer;
     }
-    main {
-      padding: 2rem;
-    }
-    footer {
-      background: #eee;
-      padding: 1rem;
-      margin-top: 2rem;
+    .resultado {
+      margin-top: 25px;
+      background-color: #f0f8ff;
+      padding: 15px;
+      border-left: 5px solid #4CAF50;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Bem-vindo ao Meu Site!</h1>
-    <p>Este site está hospedado no GitHub Pages</p>
-  </header>
-  <main>
-    <h2>🚀 Página Simples e Rápida</h2>
-    <p>Você pode editar esse conteúdo direto no seu repositório.</p>
-    <p>Crie novas seções, mude cores, adicione imagens!</p>
-  </main>
-  <footer>
-    <p>Feito com 💜 por Você</p>
-  </footer>
+  <h2>Calculadora de Faturamento Diário</h2>
+
+  <label for="diaSemana">Dia da Semana:</label>
+  <select id="diaSemana">
+    <option value="segunda">Segunda</option>
+    <option value="terca">Terça</option>
+    <option value="quarta">Quarta</option>
+    <option value="quinta">Quinta</option>
+    <option value="sexta">Sexta</option>
+    <option value="sabado">Sábado</option>
+    <option value="domingo">Domingo</option>
+  </select>
+
+  <label for="faturamento">Quanto você faturou hoje?</label>
+  <input type="number" id="faturamento" placeholder="Digite o valor em reais">
+
+  <button onclick="calcular()">Calcular</button>
+
+  <div id="resultado" class="resultado" style="display:none;"></div>
+
+  <script>
+    const metas = {
+      segunda: { tipo: "Ruim", meta: 168.90, percentual: 2.3 },
+      terca:   { tipo: "Folga", meta: 0,      percentual: 0 },
+      quarta:  { tipo: "Normal", meta: 209.35, percentual: 4.7 },
+      quinta:  { tipo: "Normal", meta: 209.35, percentual: 4.7 },
+      sexta:   { tipo: "Normal", meta: 209.35, percentual: 4.7 },
+      sabado:  { tipo: "Bom", meta: 249.85, percentual: 7.8 },
+      domingo: { tipo: "Bom", meta: 249.85, percentual: 7.8 }
+    };
+
+    function calcular() {
+      const dia = document.getElementById("diaSemana").value;
+      const faturado = parseFloat(document.getElementById("faturamento").value);
+
+      const info = metas[dia];
+      const valorGuardar = faturado * (info.percentual / 100);
+      const diferenca = faturado - info.meta;
+      const status = diferenca > 0 ? "✅ Acima da meta" :
+                    diferenca === 0 ? "🟡 Meta atingida" :
+                    "⚠️ Abaixo da meta";
+
+      document.getElementById("resultado").innerHTML = `
+        <strong>Tipo de Dia:</strong> ${info.tipo}<br>
+        <strong>Meta de Faturamento:</strong> R$ ${info.meta.toFixed(2)}<br>
+        <strong>Você faturou:</strong> R$ ${faturado.toFixed(2)}<br>
+        <strong>Valor a guardar (${info.percentual}%):</strong> R$ ${valorGuardar.toFixed(2)}<br>
+        <strong>Diferença em relação à meta:</strong> R$ ${diferenca.toFixed(2)}<br>
+        <strong>Status:</strong> ${status}
+      `;
+      document.getElementById("resultado").style.display = "block";
+    }
+  </script>
 </body>
 </html>
